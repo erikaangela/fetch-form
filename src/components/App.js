@@ -1,4 +1,5 @@
 import React from "react";
+import Field from "./Field";
 
 const App = () => {
   return (
@@ -8,22 +9,19 @@ const App = () => {
       <div className="field">
         <label>Full Name</label>
         <div className="two fields">
-          <div className="field">
-            <input type="text" name="first-name" placeholder="First Name" />
-          </div>
-          <div className="field">
-            <input type="text" name="last-name" placeholder="Last Name" />
-          </div>
+          <Field type="text" name="first-name" placeholder="First Name" />
+          <Field type="text" name="last-name" placeholder="Last Name" />
         </div>
       </div>
-      <div className="field">
-        <label>Email</label>
-        <input type="text" name="email" placeholder="Email" />
-      </div>
-      <div className="field">
-        <label>Password</label>
-        <input type="text" name="password" placeholder="Password" />
-      </div>
+
+      <Field label="Email" type="text" name="email" placeholder="Email" />
+      <Field
+        label="Password"
+        type="text"
+        name="password"
+        placeholder="Password"
+      />
+
       <div className="field">
         <label>Occupation</label>
         <select className="ui fluid dropdown">
@@ -36,6 +34,7 @@ const App = () => {
           <option value="">State</option>
         </select>
       </div>
+
       <button className="ui button" type="submit">
         Submit
       </button>
