@@ -1,47 +1,69 @@
-import React, { useEffect } from "react";
+import React from "react";
 import Field from "./Field";
 import Options from "./Options";
 import axios from "axios";
 
-const App = () => {
-  const fetchOptions = () => {
+class App extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      occupations: [],
+      states: [],
+    };
+  }
+
+  componentDidMount() {
     axios
       .get("https://frontend-take-home.fetchrewards.com/form")
-        .then((response) => {const {occupations, states} = response.data
-  });
+      .then((response) => {
+        const { occupations, states } = response.data;
+        this.setState({ occupations });
+        this.setState({ states });
+      });
+  }
 
-  useEffect(() => {
-    fetchOptions();
-  }, []);
+  render() {
+    console.log(this.state.occupations);
 
-  return (
-    <form className="ui form">
-      <h4 className="ui dividing header">User Creation Form</h4>
+    return (
+      <form className="ui form">
+        <h4 className="ui dividing header">User Creation Form</h4>
 
-      <div className="field">
-        <label>Full Name</label>
-        <div className="two fields">
-          <Field type="text" name="first-name" placeholder="First Name" />
-          <Field type="text" name="last-name" placeholder="Last Name" />
+        <div className="field">
+          <label>Full Name</label>
+          <div className="two fields">
+            <Field type="text" name="first-name" placeholder="First Name" />
+            <Field type="text" name="last-name" placeholder="Last Name" />
+          </div>
         </div>
-      </div>
 
-      <Field label="Email" type="text" name="email" placeholder="Email" />
-      <Field
-        label="Password"
-        type="text"
-        name="password"
-        placeholder="Password"
-      />
+        <Field label="Email" type="text" name="email" placeholder="Email" />
+        <Field
+          label="Password"
+          type="text"
+          name="password"
+          placeholder="Password"
+        />
 
-      <Options label="Occupation" array={occupations} />
-      <Options label="State" />
+        {/* <Options label="Occupation" array={this.state.occupations} />
+        <Options label="State" /> */}
 
-      <button className="ui button" type="submit">
-        Submit
-      </button>
-    </form>
-  );
-};
+        <div className="field">
+          <label>Test</label>
+          <select className="ui fluid dropdown">
+            <option value="">Test</option>
+            {this.state.occupations.map((occupation) => (
+              <option value={occupation}>{occupation}</option>
+            ))}
+          </select>
+        </div>
+
+        <button className="ui button" type="submit">
+          Submit
+        </button>
+      </form>
+    );
+  }
+}
 
 export default App;

@@ -23,7 +23,7 @@ class Options extends React.Component {
         <label>{this.props.label}</label>
         <select className="ui fluid dropdown" value={this.state.value}>
           <option value="">{this.props.label}</option>
-          {/* mapOptions */}
+          {/* {mapOptions} */}
         </select>
       </div>
     );
