@@ -7,8 +7,8 @@ const App = () => {
   const fetchOptions = () => {
     axios
       .get("https://frontend-take-home.fetchrewards.com/form")
-      .then((response) => console.log(response.data));
-  };
+        .then((response) => {const {occupations, states} = response.data
+  });
 
   useEffect(() => {
     fetchOptions();
@@ -34,7 +34,7 @@ const App = () => {
         placeholder="Password"
       />
 
-      <Options label="Occupation" />
+      <Options label="Occupation" array={occupations} />
       <Options label="State" />
 
       <button className="ui button" type="submit">
