@@ -1,6 +1,6 @@
 import React from "react";
 import Field from "./Field";
-import Options from "./Options";
+// import Options from "./Options";
 import axios from "axios";
 
 class App extends React.Component {
@@ -23,8 +23,6 @@ class App extends React.Component {
   }
 
   render() {
-    console.log(this.state.occupations);
-
     return (
       <form className="ui form">
         <h4 className="ui dividing header">User Creation Form</h4>
@@ -49,11 +47,25 @@ class App extends React.Component {
         <Options label="State" /> */}
 
         <div className="field">
-          <label>Test</label>
+          <label>Occupations</label>
           <select className="ui fluid dropdown">
-            <option value="">Test</option>
+            <option value="">Select an occupation</option>
             {this.state.occupations.map((occupation) => (
-              <option value={occupation}>{occupation}</option>
+              <option value={occupation} key={occupation}>
+                {occupation}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div className="field">
+          <label>State</label>
+          <select className="ui fluid dropdown">
+            <option value="">Select a state</option>
+            {this.state.states.map((state) => (
+              <option value={state.name} key={state.abbreviation}>
+                {state.name}
+              </option>
             ))}
           </select>
         </div>

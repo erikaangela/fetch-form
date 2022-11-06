@@ -1,5 +1,4 @@
-import React, { useEffect } from "react";
-import axios from "axios";
+import React from "react";
 
 class Options extends React.Component {
   constructor(props) {
@@ -23,7 +22,7 @@ class Options extends React.Component {
         <label>{this.props.label}</label>
         <select className="ui fluid dropdown" value={this.state.value}>
           <option value="">{this.props.label}</option>
-          {/* {mapOptions} */}
+          {/* {this.mapOptions} */}
         </select>
       </div>
     );
