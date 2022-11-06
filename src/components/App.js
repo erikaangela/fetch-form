@@ -9,7 +9,12 @@ class App extends React.Component {
     this.state = {
       occupations: [],
       states: [],
+      selectedOccupation: "",
+      selectedState: "",
     };
+
+    this.handleOccupationChange = this.handleOccupationChange.bind(this);
+    this.handleStateChange = this.handleStateChange.bind(this);
   }
 
   componentDidMount() {
@@ -20,6 +25,16 @@ class App extends React.Component {
         this.setState({ occupations });
         this.setState({ states });
       });
+  }
+
+  handleOccupationChange(e) {
+    console.log("occupation selected");
+    this.setState({ selectedOccupation: e.target.value });
+  }
+
+  handleStateChange(e) {
+    console.log("state selected");
+    this.setState({ selectedState: e.target.value });
   }
 
   render() {
@@ -48,7 +63,11 @@ class App extends React.Component {
 
         <div className="field">
           <label>Occupations</label>
-          <select className="ui fluid dropdown">
+          <select
+            className="ui fluid dropdown"
+            value={this.state.selectedOccupation}
+            onChange={this.handleOccupationChange}
+          >
             <option value="">Select an occupation</option>
             {this.state.occupations.map((occupation) => (
               <option value={occupation} key={occupation}>
@@ -60,7 +79,11 @@ class App extends React.Component {
 
         <div className="field">
           <label>State</label>
-          <select className="ui fluid dropdown">
+          <select
+            className="ui fluid dropdown"
+            value={this.state.selectedState}
+            onChange={this.handleStateChange}
+          >
             <option value="">Select a state</option>
             {this.state.states.map((state) => (
               <option value={state.name} key={state.abbreviation}>
