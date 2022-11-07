@@ -36,24 +36,22 @@ class App extends React.Component {
     e.preventDefault();
 
     const user = {
-      name: this.props.value,
-      email: "???",
-      password: "???",
-      occupation: "???",
-      state: "???",
+      name: this.state.firstName,
+      email: this.state.email,
+      password: this.state.password,
+      occupation: this.state.selectedOccupation,
+      state: this.state.selectedState,
     };
+    console.log(user);
 
     axios
-      .post("https://frontend-take-home.fetchrewards.com/form", { user })
+      .post("https://frontend-take-home.fetchrewards.com/form", user)
       .then((response) => {
         console.log(response);
-        console.log(response.data);
       });
   };
 
   render() {
-    console.log(this.state);
-
     return (
       <form className="ui form" onSubmit={this.handleSubmit}>
         <h4 className="ui dividing header">User Creation Form</h4>
