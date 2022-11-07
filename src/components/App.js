@@ -1,12 +1,21 @@
 import React from "react";
 import axios from "axios";
 
+// const validEmailRegex = RegExp(
+//   /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i
+// );
+
+// const validateForm = (errors) => {
+//   let valid = true;
+//   Object.values(errors).forEach((val) => val.length > 0 && (valid = false));
+//   return valid;
+// };
+
 class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      firstName: "",
-      lastName: "",
+      name: "",
       email: "",
       password: "",
       selectedOccupation: "",
@@ -25,18 +34,21 @@ class App extends React.Component {
         const { occupations, states } = response.data;
         this.setState({ occupations });
         this.setState({ states });
-      });
+      })
+      .catch((error) => console.log(error));
   }
 
   handleChange(e) {
-    this.setState({ ...this.state, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+
+    this.setState({ ...this.state, [name]: value });
   }
 
   handleSubmit = (e) => {
     e.preventDefault();
 
     const user = {
-      name: this.state.firstName,
+      name: this.state.name,
       email: this.state.email,
       password: this.state.password,
       occupation: this.state.selectedOccupation,
@@ -48,7 +60,8 @@ class App extends React.Component {
       .post("https://frontend-take-home.fetchrewards.com/form", user)
       .then((response) => {
         console.log(response);
-      });
+      })
+      .catch((error) => console.log(error));
   };
 
   render() {
@@ -58,26 +71,13 @@ class App extends React.Component {
 
         <div className="field">
           <label>Full Name</label>
-          <div className="two fields">
-            <div className="field">
-              <input
-                type="text"
-                name="firstName"
-                placeholder="First Name"
-                value={this.state.firstName}
-                onChange={this.handleChange}
-              />
-            </div>
-            <div className="field">
-              <input
-                type="text"
-                name="lastName"
-                placeholder="Last Name"
-                value={this.state.lastName}
-                onChange={this.handleChange}
-              />
-            </div>
-          </div>
+          <input
+            type="text"
+            name="name"
+            placeholder="Enter first and last name"
+            value={this.state.name}
+            onChange={this.handleChange}
+          />
         </div>
 
         <div className="field">
