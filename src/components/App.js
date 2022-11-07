@@ -1,20 +1,21 @@
 import React from "react";
-import Field from "./Field";
-// import Options from "./Options";
 import axios from "axios";
 
 class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      occupations: [],
-      states: [],
+      firstName: "",
+      lastName: "",
+      email: "",
+      password: "",
       selectedOccupation: "",
       selectedState: "",
+      occupations: [],
+      states: [],
     };
 
-    this.handleOccupationChange = this.handleOccupationChange.bind(this);
-    this.handleStateChange = this.handleStateChange.bind(this);
+    this.handleChange = this.handleChange.bind(this);
   }
 
   componentDidMount() {
@@ -27,46 +28,88 @@ class App extends React.Component {
       });
   }
 
-  handleOccupationChange(e) {
-    console.log("occupation selected");
-    this.setState({ selectedOccupation: e.target.value });
+  handleChange(e) {
+    this.setState({ ...this.state, [e.target.name]: e.target.value });
   }
 
-  handleStateChange(e) {
-    console.log("state selected");
-    this.setState({ selectedState: e.target.value });
-  }
+  handleSubmit = (e) => {
+    e.preventDefault();
+
+    const user = {
+      name: this.props.value,
+      email: "???",
+      password: "???",
+      occupation: "???",
+      state: "???",
+    };
+
+    axios
+      .post("https://frontend-take-home.fetchrewards.com/form", { user })
+      .then((response) => {
+        console.log(response);
+        console.log(response.data);
+      });
+  };
 
   render() {
+    console.log(this.state);
+
     return (
-      <form className="ui form">
+      <form className="ui form" onSubmit={this.handleSubmit}>
         <h4 className="ui dividing header">User Creation Form</h4>
 
         <div className="field">
           <label>Full Name</label>
           <div className="two fields">
-            <Field type="text" name="first-name" placeholder="First Name" />
-            <Field type="text" name="last-name" placeholder="Last Name" />
+            <div className="field">
+              <input
+                type="text"
+                name="firstName"
+                placeholder="First Name"
+                value={this.state.firstName}
+                onChange={this.handleChange}
+              />
+            </div>
+            <div className="field">
+              <input
+                type="text"
+                name="lastName"
+                placeholder="Last Name"
+                value={this.state.lastName}
+                onChange={this.handleChange}
+              />
+            </div>
           </div>
         </div>
 
-        <Field label="Email" type="text" name="email" placeholder="Email" />
-        <Field
-          label="Password"
-          type="text"
-          name="password"
-          placeholder="Password"
-        />
-
-        {/* <Options label="Occupation" array={this.state.occupations} />
-        <Options label="State" /> */}
+        <div className="field">
+          <label>Email</label>
+          <input
+            type="text"
+            name="email"
+            placeholder="Email"
+            value={this.state.email}
+            onChange={this.handleChange}
+          />
+        </div>
+        <div className="field">
+          <label>Password</label>
+          <input
+            type="text"
+            name="password"
+            placeholder="Password"
+            value={this.state.password}
+            onChange={this.handleChange}
+          />
+        </div>
 
         <div className="field">
           <label>Occupations</label>
           <select
             className="ui fluid dropdown"
+            name="selectedOccupation"
             value={this.state.selectedOccupation}
-            onChange={this.handleOccupationChange}
+            onChange={this.handleChange}
           >
             <option value="">Select an occupation</option>
             {this.state.occupations.map((occupation) => (
@@ -81,8 +124,9 @@ class App extends React.Component {
           <label>State</label>
           <select
             className="ui fluid dropdown"
+            name="selectedState"
             value={this.state.selectedState}
-            onChange={this.handleStateChange}
+            onChange={this.handleChange}
           >
             <option value="">Select a state</option>
             {this.state.states.map((state) => (
