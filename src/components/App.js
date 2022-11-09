@@ -18,7 +18,7 @@ class App extends React.Component {
       selectedState: "",
       occupations: [],
       states: [],
-      errors: {},
+      formErrors: {},
       submitRequested: false,
     };
 
@@ -57,12 +57,12 @@ class App extends React.Component {
       state: this.state.selectedState,
     };
 
-    const errors = this.validateForm(user);
+    const formErrors = this.validateForm(user);
 
-    this.setState({ errors });
+    this.setState({ formErrors });
 
     if (
-      Object.keys(this.state.errors).length === 0 &&
+      Object.values(this.state.formErrors).length === 0 &&
       this.state.submitRequested
     ) {
       axios
@@ -75,31 +75,33 @@ class App extends React.Component {
   };
 
   validateForm(values) {
-    const errors = {};
+    const formErrors = {};
     const validEmailRegex = RegExp(
       /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i
     );
     if (!values.name) {
-      errors.name = "Name is required.";
+      formErrors.name = "Name is required.";
     }
     if (!values.email) {
-      errors.email = "Email is required.";
+      formErrors.email = "Email is required.";
     } else if (!validEmailRegex.test(values.email)) {
-      errors.email = "Format is not a valid email format.";
+      formErrors.email = "Format is not a valid email format.";
     }
     if (!values.password) {
-      errors.password = "Password is required.";
+      formErrors.password = "Password is required.";
     }
     if (!values.occupation) {
-      errors.occupation = "Occupation is required.";
+      formErrors.occupation = "Occupation is required.";
     }
     if (!values.state) {
-      errors.state = "State is required.";
+      formErrors.state = "State is required.";
     }
-    return errors;
+    return formErrors;
   }
 
   render() {
+    console.log(this.state.formErrors);
+    console.log(this.state.submitRequested);
     return (
       <form className="ui form" onSubmit={this.handleSubmit}>
         <h4 className="ui dividing header">User Creation Form</h4>
@@ -114,7 +116,8 @@ class App extends React.Component {
             onChange={this.handleChange}
           />
         </div>
-        <p>{this.state.errors.name}</p>
+        <p>{this.state.formErrors.name}</p>
+
         <div className="field">
           <label>Email</label>
           <input
@@ -125,7 +128,7 @@ class App extends React.Component {
             onChange={this.handleChange}
           />
         </div>
-        <p>{this.state.errors.email}</p>
+        <p>{this.state.formErrors.email}</p>
 
         <div className="field">
           <label>Password</label>
@@ -137,6 +140,7 @@ class App extends React.Component {
             onChange={this.handleChange}
           />
         </div>
+        <p>{this.state.formErrors.password}</p>
 
         <div className="field">
           <label>Occupation</label>
@@ -154,6 +158,7 @@ class App extends React.Component {
             ))}
           </select>
         </div>
+        <p>{this.state.formErrors.occupation}</p>
 
         <div className="field">
           <label>State</label>
@@ -171,6 +176,7 @@ class App extends React.Component {
             ))}
           </select>
         </div>
+        <p>{this.state.formErrors.state}</p>
 
         <button className="ui button" type="submit">
           Submit
