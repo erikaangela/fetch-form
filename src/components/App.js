@@ -86,8 +86,6 @@ const App = () => {
     return formErrors;
   };
 
-  console.log(formValues);
-  console.log(submitRequested);
   return (
     <form className="ui form" onSubmit={handleSubmit}>
       <h4 className="ui dividing header">User Creation Form</h4>
@@ -167,6 +165,14 @@ const App = () => {
       <button className="ui button" type="submit">
         Submit
       </button>
+
+      {Object.values(formErrors).length === 0 && submitRequested ? (
+        <div className="ui positive message">
+          <i className="close icon"></i>
+          <div className="header">Your user registration was successful.</div>
+          <p>You may now log-in with the username you have chosen.</p>
+        </div>
+      ) : null}
     </form>
   );
 };
