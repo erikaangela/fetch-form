@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { isCompositeComponent } from "react-dom/test-utils";
 
 // const validateForm = (errors) => {
 //   let valid = true;
@@ -7,66 +8,52 @@ import axios from "axios";
 //   return valid;
 // };
 
-class App extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      name: "",
-      email: "",
-      password: "",
-      selectedOccupation: "",
-      selectedState: "",
-      occupations: [],
-      states: [],
-      formErrors: {},
-      submitRequested: false,
-    };
+const App = () => {
+  const initialValues = {
+    name: "",
+    email: "",
+    password: "",
+    selectedOccupation: "",
+    selectedState: "",
+    occupations: [],
+    states: [],
+  };
+  const [formValues, setFormValues] = useState(initialValues);
+  const [formErrors, setFormErrors] = useState({});
+  const [submitRequested, setSubmitRequested] = useState(false);
 
-    this.handleChange = this.handleChange.bind(this);
-  }
+  useEffect(() => {
+    async function fetchData() {
+      await axios
+        .get("https://frontend-take-home.fetchrewards.com/form")
+        .then((response) => {
+          const { occupations, states } = response.data;
 
-  componentDidMount() {
-    axios
-      .get("https://frontend-take-home.fetchrewards.com/form")
-      .then((response) => {
-        const { occupations, states } = response.data;
-        this.setState({ occupations });
-        this.setState({ states });
-      })
-      .catch((error) => console.log(error));
-  }
+          setFormValues({
+            ...formValues,
+            occupations: occupations,
+            states: states,
+          });
+        })
+        .catch((error) => console.log(error));
+    }
+    fetchData();
+  }, []);
 
-  handleChange(e) {
+  const handleChange = (e) => {
     const { name, value } = e.target;
+    setFormValues({ ...formValues, [name]: value });
+  };
 
-    this.setState({ ...this.state, [name]: value });
-  }
-
-  handleSubmit = (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
 
-    const submitRequested = true;
+    setSubmitRequested(true);
+    setFormErrors(validateForm(formValues));
 
-    this.setState({ submitRequested });
-
-    const user = {
-      name: this.state.name,
-      email: this.state.email,
-      password: this.state.password,
-      occupation: this.state.selectedOccupation,
-      state: this.state.selectedState,
-    };
-
-    const formErrors = this.validateForm(user);
-
-    this.setState({ formErrors });
-
-    if (
-      Object.values(this.state.formErrors).length === 0 &&
-      this.state.submitRequested
-    ) {
+    if (Object.values(formErrors).length === 0 && submitRequested) {
       axios
-        .post("https://frontend-take-home.fetchrewards.com/form", user)
+        .post("https://frontend-take-home.fetchrewards.com/form", formValues)
         .then((response) => {
           console.log(response);
         })
@@ -74,7 +61,7 @@ class App extends React.Component {
     }
   };
 
-  validateForm(values) {
+  const validateForm = (values) => {
     const formErrors = {};
     const validEmailRegex = RegExp(
       /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i
@@ -97,93 +84,91 @@ class App extends React.Component {
       formErrors.state = "State is required.";
     }
     return formErrors;
-  }
+  };
 
-  render() {
-    console.log(this.state.formErrors);
-    console.log(this.state.submitRequested);
-    return (
-      <form className="ui form" onSubmit={this.handleSubmit}>
-        <h4 className="ui dividing header">User Creation Form</h4>
+  console.log(formValues);
+  console.log(submitRequested);
+  return (
+    <form className="ui form" onSubmit={handleSubmit}>
+      <h4 className="ui dividing header">User Creation Form</h4>
 
-        <div className="field">
-          <label>Full Name</label>
-          <input
-            type="text"
-            name="name"
-            placeholder="Enter first and last name"
-            value={this.state.name}
-            onChange={this.handleChange}
-          />
-        </div>
-        <p>{this.state.formErrors.name}</p>
+      <div className="field">
+        <label>Full Name</label>
+        <input
+          type="text"
+          name="name"
+          placeholder="Enter first and last name"
+          value={formValues.name}
+          onChange={handleChange}
+        />
+      </div>
+      <p>{formErrors.name}</p>
 
-        <div className="field">
-          <label>Email</label>
-          <input
-            type="text"
-            name="email"
-            placeholder="Email"
-            value={this.state.email}
-            onChange={this.handleChange}
-          />
-        </div>
-        <p>{this.state.formErrors.email}</p>
+      <div className="field">
+        <label>Email</label>
+        <input
+          type="text"
+          name="email"
+          placeholder="Email"
+          value={formValues.email}
+          onChange={handleChange}
+        />
+      </div>
+      <p>{formErrors.email}</p>
 
-        <div className="field">
-          <label>Password</label>
-          <input
-            type="text"
-            name="password"
-            placeholder="Password"
-            value={this.state.password}
-            onChange={this.handleChange}
-          />
-        </div>
-        <p>{this.state.formErrors.password}</p>
+      <div className="field">
+        <label>Password</label>
+        <input
+          type="text"
+          name="password"
+          placeholder="Password"
+          value={formValues.password}
+          onChange={handleChange}
+        />
+      </div>
+      <p>{formErrors.password}</p>
 
-        <div className="field">
-          <label>Occupation</label>
-          <select
-            className="ui fluid dropdown"
-            name="selectedOccupation"
-            value={this.state.selectedOccupation}
-            onChange={this.handleChange}
-          >
-            <option value="">Select an occupation</option>
-            {this.state.occupations.map((occupation) => (
-              <option value={occupation} key={occupation}>
-                {occupation}
-              </option>
-            ))}
-          </select>
-        </div>
-        <p>{this.state.formErrors.occupation}</p>
+      <div className="field">
+        <label>Occupation</label>
+        <select
+          className="ui fluid dropdown"
+          name="selectedOccupation"
+          value={formValues.selectedOccupation}
+          onChange={handleChange}
+        >
+          <option value="">Select an occupation</option>
+          {formValues.occupations.map((occupation) => (
+            <option value={occupation} key={occupation}>
+              {occupation}
+            </option>
+          ))}
+        </select>
+      </div>
+      <p>{formErrors.occupation}</p>
 
-        <div className="field">
-          <label>State</label>
-          <select
-            className="ui fluid dropdown"
-            name="selectedState"
-            value={this.state.selectedState}
-            onChange={this.handleChange}
-          >
-            <option value="">Select a state</option>
-            {this.state.states.map((state) => (
-              <option value={state.name} key={state.abbreviation}>
-                {state.name}
-              </option>
-            ))}
-          </select>
-        </div>
-        <p>{this.state.formErrors.state}</p>
+      <div className="field">
+        <label>State</label>
+        <select
+          className="ui fluid dropdown"
+          name="selectedState"
+          value={formValues.selectedState}
+          onChange={handleChange}
+        >
+          <option value="">Select a state</option>
+          {formValues.states.map((state) => (
+            <option value={state.name} key={state.abbreviation}>
+              {state.name}
+            </option>
+          ))}
+        </select>
+      </div>
+      <p>{formErrors.state}</p>
 
-        <button className="ui button" type="submit">
-          Submit
-        </button>
-      </form>
-    );
-  }
-}
+      <button className="ui button" type="submit">
+        Submit
+      </button>
+    </form>
+  );
+};
 
 export default App;
