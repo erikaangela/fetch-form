@@ -4,6 +4,9 @@ import axios from "axios";
 import "../stylesheet.css";
 
 const Form = () => {
+  // We set our initial values to empty strings and arrays, and declare the states that will be used: our form's input values,
+  // errors, and submission (whether the button was pressed or not).
+
   const initialValues = {
     name: "",
     email: "",
@@ -17,6 +20,8 @@ const Form = () => {
   const [formErrors, setFormErrors] = useState({});
   const [submitRequested, setSubmitRequested] = useState(false);
 
+  //   fetchData is called once upon rendering to make a GET request to our API
+  // This fills in the list of occupations and states for the dropdown menus
   useEffect(() => {
     async function fetchData() {
       await axios
@@ -40,12 +45,18 @@ const Form = () => {
     setFormValues({ ...formValues, [name]: value });
   };
 
+  // After the button is pressed and the form is submitted, handleSubmit validates the form
+  // values, which will return an object of error messages (stored in our formErrors state),
+  // and confirms a submit was made
   const handleSubmit = (e) => {
     e.preventDefault();
     setFormErrors(validateForm(formValues));
     setSubmitRequested(true);
   };
 
+  // This useEffect is called whenever our object of error messages changes
+  // It only makes a POST request to our API if our submission satisfies two
+  // conditions: we have no errors and a submission was made
   useEffect(() => {
     if (Object.values(formErrors).length === 0 && submitRequested) {
       axios
@@ -69,7 +80,7 @@ const Form = () => {
     if (!values.email) {
       formErrors.email = "Required";
     } else if (!validEmailRegex.test(values.email)) {
-      formErrors.email = "Format is not a valid email format.";
+      formErrors.email = "Please enter a valid email address";
     }
     if (!values.password) {
       formErrors.password = "Required";
@@ -170,7 +181,6 @@ const Form = () => {
 
       {Object.values(formErrors).length === 0 && submitRequested ? (
         <div className="ui positive message">
-          <i className="close icon"></i>
           <div className="header">Your user registration was successful.</div>
           <p>You may now log-in with the username you have chosen.</p>
         </div>
