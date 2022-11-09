@@ -19,6 +19,7 @@ class App extends React.Component {
       occupations: [],
       states: [],
       errors: {},
+      submitRequested: false,
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -44,6 +45,10 @@ class App extends React.Component {
   handleSubmit = (e) => {
     e.preventDefault();
 
+    const submitRequested = true;
+
+    this.setState({ submitRequested });
+
     const user = {
       name: this.state.name,
       email: this.state.email,
@@ -52,18 +57,21 @@ class App extends React.Component {
       state: this.state.selectedState,
     };
 
-    console.log(user);
-
     const errors = this.validateForm(user);
 
     this.setState({ errors });
 
-    axios
-      .post("https://frontend-take-home.fetchrewards.com/form", user)
-      .then((response) => {
-        console.log(response);
-      })
-      .catch((error) => console.log(error));
+    if (
+      Object.keys(this.state.errors).length === 0 &&
+      this.state.submitRequested
+    ) {
+      axios
+        .post("https://frontend-take-home.fetchrewards.com/form", user)
+        .then((response) => {
+          console.log(response);
+        })
+        .catch((error) => console.log(error));
+    }
   };
 
   validateForm(values) {
@@ -117,6 +125,8 @@ class App extends React.Component {
             onChange={this.handleChange}
           />
         </div>
+        <p>{this.state.errors.email}</p>
+
         <div className="field">
           <label>Password</label>
           <input
