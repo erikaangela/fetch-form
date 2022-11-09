@@ -1,12 +1,12 @@
 import React from "react";
-import Grid from "./Form";
+import Form from "./Form";
 
 import "../stylesheet.css";
 
 const App = () => {
   return (
     <div className="ui container">
-      <Grid />
+      <Form />
     </div>
   );
 };
