@@ -1,8 +1,12 @@
 import React from "react";
-import Grid from "./Grid";
+import Grid from "./Form";
 
 const App = () => {
-  return <Grid />;
+  return (
+    <div className="ui container">
+      <Grid />
+    </div>
+  );
 };
 
 export default App;

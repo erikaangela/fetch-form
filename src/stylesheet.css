@@ -1,0 +1,8 @@
+label:before {
+  content: "*";
+  color: red;
+}
+
+.required {
+  color: red;
+}
