@@ -164,7 +164,7 @@ const Form = () => {
         </select>
       </div>
 
-      <button className="large ui button" type="submit">
+      <button className="large ui right floated button" type="submit">
         Register
       </button>
 
