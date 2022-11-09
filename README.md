@@ -18,7 +18,7 @@ The one-page site displays a form with the following required inputs:
 * Occupation
 * State
 
-The Occupation and State dropdown menu's are obtained from a GET request to the API. values If a field is not filled out upon submission, an error message is returned (i.e., a red "Required" or email specific feedback). If the submission is successful, all error messages disappear, a POST request is made to the API, and a success message is displayed.
+The Occupation and State dropdown menus are obtained from a GET request to the API. If a field is not filled out upon submission, an error message is returned (i.e., a red "Required" or email specific feedback). If the submission is successful, all error messages disappear, a POST request with the form's values is made to the API, and a success message is displayed.
 
 ### Technologies Used
 
