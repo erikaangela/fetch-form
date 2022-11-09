@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { isCompositeComponent } from "react-dom/test-utils";
 
 // const validateForm = (errors) => {
 //   let valid = true;
@@ -13,8 +12,8 @@ const App = () => {
     name: "",
     email: "",
     password: "",
-    selectedOccupation: "",
-    selectedState: "",
+    occupation: "",
+    state: "",
     occupations: [],
     states: [],
   };
@@ -47,10 +46,11 @@ const App = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    setSubmitRequested(true);
     setFormErrors(validateForm(formValues));
+    setSubmitRequested(true);
+  };
 
+  useEffect(() => {
     if (Object.values(formErrors).length === 0 && submitRequested) {
       axios
         .post("https://frontend-take-home.fetchrewards.com/form", formValues)
@@ -59,7 +59,7 @@ const App = () => {
         })
         .catch((error) => console.log(error));
     }
-  };
+  }, [formErrors]);
 
   const validateForm = (values) => {
     const formErrors = {};
@@ -132,8 +132,8 @@ const App = () => {
         <label>Occupation</label>
         <select
           className="ui fluid dropdown"
-          name="selectedOccupation"
-          value={formValues.selectedOccupation}
+          name="occupation"
+          value={formValues.occupation}
           onChange={handleChange}
         >
           <option value="">Select an occupation</option>
@@ -150,8 +150,8 @@ const App = () => {
         <label>State</label>
         <select
           className="ui fluid dropdown"
-          name="selectedState"
-          value={formValues.selectedState}
+          name="state"
+          value={formValues.state}
           onChange={handleChange}
         >
           <option value="">Select a state</option>
