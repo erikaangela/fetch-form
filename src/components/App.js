@@ -1,10 +1,6 @@
 import React from "react";
 import axios from "axios";
 
-// const validEmailRegex = RegExp(
-//   /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i
-// );
-
 // const validateForm = (errors) => {
 //   let valid = true;
 //   Object.values(errors).forEach((val) => val.length > 0 && (valid = false));
@@ -22,6 +18,7 @@ class App extends React.Component {
       selectedState: "",
       occupations: [],
       states: [],
+      errors: {},
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -54,7 +51,12 @@ class App extends React.Component {
       occupation: this.state.selectedOccupation,
       state: this.state.selectedState,
     };
+
     console.log(user);
+
+    const errors = this.validateForm(user);
+
+    this.setState({ errors });
 
     axios
       .post("https://frontend-take-home.fetchrewards.com/form", user)
@@ -63,6 +65,31 @@ class App extends React.Component {
       })
       .catch((error) => console.log(error));
   };
+
+  validateForm(values) {
+    const errors = {};
+    const validEmailRegex = RegExp(
+      /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i
+    );
+    if (!values.name) {
+      errors.name = "Name is required.";
+    }
+    if (!values.email) {
+      errors.email = "Email is required.";
+    } else if (!validEmailRegex.test(values.email)) {
+      errors.email = "Format is not a valid email format.";
+    }
+    if (!values.password) {
+      errors.password = "Password is required.";
+    }
+    if (!values.occupation) {
+      errors.occupation = "Occupation is required.";
+    }
+    if (!values.state) {
+      errors.state = "State is required.";
+    }
+    return errors;
+  }
 
   render() {
     return (
@@ -79,7 +106,7 @@ class App extends React.Component {
             onChange={this.handleChange}
           />
         </div>
-
+        <p>{this.state.errors.name}</p>
         <div className="field">
           <label>Email</label>
           <input
@@ -102,7 +129,7 @@ class App extends React.Component {
         </div>
 
         <div className="field">
-          <label>Occupations</label>
+          <label>Occupation</label>
           <select
             className="ui fluid dropdown"
             name="selectedOccupation"
