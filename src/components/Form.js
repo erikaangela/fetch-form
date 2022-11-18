@@ -30,6 +30,7 @@ const Form = () => {
           const { occupations, states } = response.data;
 
           setFormValues({
+            // TO AVOID INFINITE LOOP, NO SPREAD FORMVALUES
             ...formValues,
             occupations: occupations,
             states: states,
@@ -50,7 +51,8 @@ const Form = () => {
   // and confirms a submit was made
   const handleSubmit = (e) => {
     e.preventDefault();
-    setFormErrors(validateForm(formValues));
+    setFormErrors(validateForm(formValues)); // MOVE POST REQ HERE AND .THEN ADD SETSUBMITREQ
+    // .CATCH ERROR CAN RETURN USER ERROR FEEDBACK
     setSubmitRequested(true);
   };
 
@@ -93,7 +95,9 @@ const Form = () => {
     }
     return formErrors;
   };
-
+  // ADD SPECIFIC TYPES TO CLEAR SOME VALIDATION
+  // REDO LABELS/INPUT FOR ACCESSIBILITY
+  // ADD ONBLUR/ONFOCUS, ARIA
   return (
     <form className="ui form" onSubmit={handleSubmit}>
       <h3 className="ui dividing header">User Creation Form</h3>
